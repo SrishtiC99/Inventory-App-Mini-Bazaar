@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <EditTextPreference
+        android:inputType="text"
+        android:key="user_name"
+        android:singleLine="true"
+        android:title="Name" />
+    <EditTextPreference
+        android:inputType="text"
+        android:key="@string/address_key"
+        android:maxLines="2"
+        android:title="Your Address"/>
+    <EditTextPreference
+        android:inputType = "phone"
+        android:key="@string/phone_number_key"
+        android:singleLine="true"
+        android:title="Mobile Number"/>
+</PreferenceScreen>
