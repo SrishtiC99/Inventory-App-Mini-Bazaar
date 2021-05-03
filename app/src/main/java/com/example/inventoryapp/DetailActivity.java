@@ -106,6 +106,7 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
     public void onLoaderReset(@NonNull Loader<Cursor> loader) {
 
     }
+
     private void placeOrder(){
         ContentValues values = new ContentValues();
         values.put(ProductContract.ProductEntry.COLUMN_PRODUCT_QUANTITY, quantity);

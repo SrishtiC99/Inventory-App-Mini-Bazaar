@@ -30,17 +30,13 @@ public class ProductProvider extends ContentProvider {
         sURIMatcher.addURI(ProductContract.CONTENT_AUTHORITY, ProductContract.PATH_PRODUCTS +"/#", PRODUCT_ID);
         sURIMatcher.addURI(ProductContract.CONTENT_AUTHORITY, ProductContract.PATH_LOGIN + "/#", LOGIN_ITEM);
     }
-    /*
-     * Initialize the provider and the database helper object.
-     */
+    // Initialize the provider and the database helper object.
     @Override
     public boolean onCreate() {
         dbHelper = new ProductDbHelper(getContext());
         return true;
     }
-    /*
-     * Perform the query for the given URI. Use the given projection, selection, selection arguments, and sort order.
-     */
+    // Perform the query for the given URI. Use the given projection, selection, selection arguments, and sort order.
     @Nullable
     @Override
     public Cursor query(@NonNull Uri uri, @Nullable String[] projection, @Nullable String selection, @Nullable String[] selectionArgs, @Nullable String sortOrder) {
@@ -55,7 +51,7 @@ public class ProductProvider extends ContentProvider {
         switch (match) {
             case LOGIN:
                 cursor = db.query(ProductContract.ProductEntry.TABLE_NAME_LOGIN, projection, selection, selectionArgs, null, null, sortOrder);
-                Log.e("ProductProvider", "Sign up Successful "+  uri);
+                Log.e("ProductProvider", "Sign in Successful "+  uri);
                 break;
             case PRODUCTS:
                 // For the PRODUCTS code, query the products table directly with the given
@@ -75,7 +71,7 @@ public class ProductProvider extends ContentProvider {
                 selection = ProductContract.ProductEntry._ID + "=?";
                 selectionArgs = new String[] { String.valueOf(ContentUris.parseId(uri)) };
 
-                // This will perform a query on the pets table where the _id equals 3 to return a
+                // This will perform a query on the products table where the _id equals 3 to return a
                 // Cursor containing that row of the table.
                 cursor = db.query(ProductContract.ProductEntry.TABLE_NAME, projection, selection, selectionArgs,
                         null, null, sortOrder);
@@ -83,8 +79,7 @@ public class ProductProvider extends ContentProvider {
             default:
                 throw new IllegalArgumentException("Cannot query unknown URI " + uri);
         }
-        // Set notification URI on the cursor
-        // So we know what content URI the cursor was created for
+        // Set notification URI on the cursor So we know what content URI the cursor was created for
         // If the data at this URI changes, then we know we need to update the cursor
         cursor.setNotificationUri(getContext().getContentResolver(),uri);
         return cursor;
@@ -122,8 +117,8 @@ public class ProductProvider extends ContentProvider {
                 }
                 int price = contentValues.getAsInteger(ProductContract.ProductEntry.COLUMN_PRODUCT_PRICE);
                 int quantity = contentValues.getAsInteger(ProductContract.ProductEntry.COLUMN_PRODUCT_QUANTITY);
-                if(price <= 0 ){
-                    throw new IllegalArgumentException("Invalid Price");
+                if(price <= 0 || quantity <1){
+                    throw new IllegalArgumentException("Invalid Price or Quantity");
                 }
                 return insertRow(uri, contentValues);
             default:
@@ -138,7 +133,7 @@ public class ProductProvider extends ContentProvider {
                 // This will inert a row into login Table
                 newRowId = db.insert(ProductContract.ProductEntry.TABLE_NAME_LOGIN, null, contentValues);
                 if(newRowId == -1){
-                    Log.e(LOG_TAG, "Failed to insert in login Table" + uri);
+                    Log.e(LOG_TAG, "Failed to insert into login Table" + uri);
                     return null;
                 }
                 break;
@@ -177,8 +172,7 @@ public class ProductProvider extends ContentProvider {
             default:
                 throw new IllegalArgumentException("Deletion is not supported for " + uri);
         }
-        // If 1 or more rows were deleted, then notify all listeners that the data at the
-        // given URI has changed
+        // If 1 or more rows were deleted, then notify all listeners that the data at the given URI has changed
         if (rowsDeleted != 0) {
             getContext().getContentResolver().notifyChange(uri, null);
         }
@@ -205,7 +199,7 @@ public class ProductProvider extends ContentProvider {
     }
     /*
      * Update products in the database with the given content values. Apply the changes to the rows
-     * specified in the selection and selection arguments (which could be 0 or 1 or more pets).
+     * specified in the selection and selection arguments (which could be 0 or 1 or more products).
      * Return the number of rows that were successfully updated.
      */
     private int updateProduct(Uri uri, ContentValues values, String selection, String[] selectionArgs) {

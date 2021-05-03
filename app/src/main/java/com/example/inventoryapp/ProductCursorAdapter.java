@@ -63,15 +63,5 @@ public class ProductCursorAdapter extends CursorAdapter {
         else{
             isAvailable.setText("Oops, Not Available :(");
         }
-        //setClickListener(imageView, position, parent);
-    }
-    private void setClickListener(View view, final int position, final ViewGroup parent){
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // this part is important, it lets ListView handle the clicks
-                ((ListView) parent).performItemClick(v, position, 0);
-            }
-        });
     }
 }

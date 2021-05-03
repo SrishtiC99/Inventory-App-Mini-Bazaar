@@ -27,7 +27,6 @@ public final class ProductContract {
      */
     public static final String PATH_PRODUCTS = "products";
     public static final String PATH_LOGIN = "login";
-    public static final String PATH_SUPPLIERS_LOGIN = "suppliers";
     private ProductContract(){}
 
     public static final class ProductEntry implements BaseColumns{

@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private boolean isSupplier = false;
     private static final int PRODUCT_LOADER =0;
     private ProductCursorAdapter cursorAdapter;
-    private ProductDbHelper dbHelper;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,6 +60,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    // Add a new product
                     Intent intent = new Intent(MainActivity.this, SupplierActivity.class);
                     intent.putExtra("USERID", userId);
                     intent.putExtra("PASSWORD", password);
@@ -70,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         }
         // To access our database, we instantiate our subclass of SQLiteOpenHelper
         // and pass the context, which is the current activity.
-        dbHelper = new ProductDbHelper(this);
+        ProductDbHelper dbHelper = new ProductDbHelper(this);
 
         // Find the ListView which will be populated with the product data
         ListView productListView = (ListView) findViewById(R.id.list);
@@ -83,7 +84,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         // There is no product data yet (until the loader finishes) so pass in null for the cursor
         cursorAdapter = new ProductCursorAdapter(this, null);
         productListView.setAdapter(cursorAdapter);
-        // Kick off the loader
         productListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
@@ -115,108 +115,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         });
         getSupportLoaderManager().initLoader(PRODUCT_LOADER,null,this);
     }
-    // For updating existing products
-    /*public void editProduct(View view){
-        // Create new intent to go to SupplierActivity
-        Intent intent = new Intent(MainActivity.this, SupplierActivity.class);
-
-        // Form the content URI that represents the specific product that was clicked on,
-        // by appending the "id" (passed as input to this method) onto the
-        // {@link ProductEntry#CONTENT_URI}.
-        // For example, the URI would be "content://com.example.inventoryapp/products/2"
-        // if the product with ID 2 was clicked on.
-        ViewParent parent = view.getParentForAccessibility();
-        long id = parent.get;
-
-        Uri currentProductUri = ContentUris.withAppendedId(ProductContract.ProductEntry.CONTENT_URI, id);
-
-        // Set the URI on the data field of the intent
-        intent.setData(currentProductUri);
-
-        // Launch the {@link SupplierActivity} to display the data for the current pet.
-        startActivity(intent);
-    }
-
-     */
-    /*@Override
-    protected void onStart() {
-        super.onStart();
-        displayProduct();
-    }*/
-    /*
-    private void displayProduct(){
-
-
-        // { SQLiteDatabase db = dbHelper.getReadableDatabase();
-        //We no longer need this database because we are performing the query through Content Resolver }
-
-        // Define a projection that specifies which columns from the database
-        // you will actually use after this query.
-        String[] projection = {
-                BaseColumns._ID,
-                ProductContract.ProductEntry.COLUMN_PRODUCT_NAME,
-                ProductContract.ProductEntry.COLUMN_PRODUCT_PRICE,
-                ProductContract.ProductEntry.COLUMN_PRODUCT_QUANTITY,
-                ProductContract.ProductEntry.COLUMN_PRODUCT_SUPPLIER,
-        };
-        /*
-        // Perform a query on the products table
-        Cursor cursor = db.query(
-                ProductContract.ProductEntry.TABLE_NAME,    // The table to query
-                projection,                                 // The columns to return
-                null,                              // The columns for the WHERE clause
-                null,                           // The values for the WHERE clause
-                null,                               // Don't group the rows
-                null,                                // Don't filter by row groups
-                null                                // The sort order
-        );
-         */
-        /*Cursor cursor = getContentResolver().query(ProductContract.ProductEntry.CONTENT_URI, projection,null, null, null);
-
-        TextView displayView = (TextView)findViewById(R.id.product_details);
-
-        try{
-           // displayView.setText("The products table contains " + cursor.getCount() + " products.\n\n");
-           /* displayView.append("  " + ProductContract.ProductEntry._ID + " - "
-            + ProductContract.ProductEntry.COLUMN_PRODUCT_NAME + " - "
-            + ProductContract.ProductEntry.COLUMN_PRODUCT_PRICE + " - "
-            + ProductContract.ProductEntry.COLUMN_PRODUCT_QUANTITY + " - "
-            + ProductContract.ProductEntry.COLUMN_PRODUCT_SUPPLIER + " - \n");
-
-            */
-
-            // Figure out the index of each column
-            /*int idColumnIndex = cursor.getColumnIndex(ProductContract.ProductEntry._ID);
-            int nameColumnIndex = cursor.getColumnIndex(ProductContract.ProductEntry.COLUMN_PRODUCT_NAME);
-            int priceColumnIndex = cursor.getColumnIndex(ProductContract.ProductEntry.COLUMN_PRODUCT_PRICE);
-            int quantityColumnIndex = cursor.getColumnIndex(ProductContract.ProductEntry.COLUMN_PRODUCT_QUANTITY);
-            int supplierColumnIndex = cursor.getColumnIndex(ProductContract.ProductEntry.COLUMN_PRODUCT_SUPPLIER);
-
-            // Iterate through all the returned rows in the cursor
-            while (cursor.moveToNext()){
-                // Use that index to extract the String or Int value of the word
-                // at the current row the cursor is on.
-                int currentId = cursor.getInt(idColumnIndex);
-                String currentProduct = cursor.getString(nameColumnIndex);
-                int currentPrice = cursor.getInt(priceColumnIndex);
-                int currentQuantity = cursor.getInt(quantityColumnIndex);
-                String currentSupplier = cursor.getString(supplierColumnIndex);
-
-                // Display the values from each column of the current row in the cursor in the TextView
-                displayView.append(("\n  " +
-                        currentId + "  " +
-                        currentProduct + "  " +
-                        currentPrice + "  " +
-                        currentQuantity + "  " +
-                        currentSupplier));
-
-            }
-        }finally {
-            // Always close the cursor when you're done reading from it. This releases all its
-            // resources and makes it invalid.
-            cursor.close();
-        }
-    }*/
 
     @NonNull
     @Override
@@ -280,6 +178,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         Uri newRowUri = getContentResolver().insert(ProductContract.ProductEntry.CONTENT_URI, values);
     }
     public static Bitmap drawableToBitmap(Drawable drawable) {
+
         if (drawable instanceof BitmapDrawable) {
             return ((BitmapDrawable) drawable).getBitmap();
         }
