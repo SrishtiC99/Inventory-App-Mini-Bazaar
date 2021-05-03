@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Inventory App</string>
+    <string name="app_name">Mini Bazaar</string>
     <string name="insert_dummy_data">Insert Dummy Data</string>
     <string name="delete_all">Delete all</string>
     <string name="save">Save</string>
@@ -39,4 +39,5 @@
     <string name="no_image">android.resource://com.example.inventoryapp/drawable/no_image</string>
     <string name="phone_number_key">phonenumber</string>
     <string name="log_out">Log Out</string>
+    <string name="money">money</string>
 </resources>

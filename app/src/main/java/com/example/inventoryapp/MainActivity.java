@@ -323,6 +323,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 return true;
             case R.id.settings:
                 Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+                intent.putExtra("IS_SUPPLIER", isSupplier);
                 startActivity(intent);
                 return true;
         }

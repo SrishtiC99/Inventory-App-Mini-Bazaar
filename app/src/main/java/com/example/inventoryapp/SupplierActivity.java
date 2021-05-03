@@ -17,6 +17,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -77,14 +78,9 @@ public class SupplierActivity extends AppCompatActivity implements LoaderManager
         // If the intent DOES NOT contain a product content URI, then we know that we are
         // creating a new product.
         if (currentProductUri == null) {
-            // This is a new product, so change the app bar to say "Add a Product"
-            setTitle("Add a Product");
-
             // Invalidate the options menu, so the "Delete" menu option can be hidden.
             // (It doesn't make sense to delete a pet that hasn't been created yet.)
             invalidateOptionsMenu();
-
-
         } else {
             // Otherwise this is an existing product, so change app bar to say "Edit Product"
             setTitle("Edit Product");
@@ -194,6 +190,12 @@ public class SupplierActivity extends AppCompatActivity implements LoaderManager
         String productName = productNameView.getText().toString().trim();
         String priceV = priceView.getText().toString();
         String supplierName = supplierNameView.getText().toString().trim();
+        productImageView.invalidate();
+        BitmapDrawable drawable = (BitmapDrawable) productImageView.getDrawable();
+        Bitmap bitmap = drawable.getBitmap();
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, bos);
+        byte[] bArray = bos.toByteArray();
 
         // Check if this is supposed to be a new product
         // and check if all the fields in the editor are blank
@@ -218,7 +220,7 @@ public class SupplierActivity extends AppCompatActivity implements LoaderManager
         values.put(ProductContract.ProductEntry.COLUMN_PRODUCT_SUPPLIER, supplierName);
         values.put(ProductContract.ProductEntry.COLUMN_USER_ID, userId);
         values.put(ProductContract.ProductEntry.COLUMN_PASSWORD, password);
-        values.put(ProductContract.ProductEntry.COLUMN_IMAGE, imageBlob);
+        values.put(ProductContract.ProductEntry.COLUMN_IMAGE, bArray);
         /*
         // Insert the new row, returning the primary key value of the new row
         long newRowId = db.insert(ProductContract.ProductEntry.TABLE_NAME, null, values);

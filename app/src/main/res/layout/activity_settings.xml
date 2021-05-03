@@ -19,5 +19,6 @@
         android:layout_height="wrap_content"
         android:text="@string/log_out"
         android:textStyle="bold"
-        android:padding = "30dp"/>
+        android:textSize="20sp"
+        android:padding = "50dp"/>
 </LinearLayout>

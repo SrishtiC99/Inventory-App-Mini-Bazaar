@@ -2,6 +2,7 @@ package com.example.inventoryapp;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.EditTextPreference;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -23,7 +24,8 @@ public class SettingsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
-
+        Intent intent = getIntent();
+        boolean isSupplier = intent.getExtras().getBoolean("IS_SUPPLIER", false);
         TextView logOut = (TextView)findViewById(R.id.log_out);
         logOut.setOnClickListener(new View.OnClickListener() {
             @Override
