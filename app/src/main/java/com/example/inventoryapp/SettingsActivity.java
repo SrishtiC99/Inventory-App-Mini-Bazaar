@@ -3,8 +3,12 @@ package com.example.inventoryapp;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * SettingsActivity is responsible for displaying the {@link SettingsFragment}. It is also
@@ -19,6 +23,16 @@ public class SettingsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
+
+        TextView logOut = (TextView)findViewById(R.id.log_out);
+        logOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(SettingsActivity.this, "Thank You for using\nYou have successfully Log out!", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(SettingsActivity.this, LoginActivity.class);
+                startActivity(intent);
+            }
+        });
 
         // should display home as up
         this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);

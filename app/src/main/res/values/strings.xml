@@ -38,4 +38,5 @@
     <string name="address_key">address</string>
     <string name="no_image">android.resource://com.example.inventoryapp/drawable/no_image</string>
     <string name="phone_number_key">phonenumber</string>
+    <string name="log_out">Log Out</string>
 </resources>

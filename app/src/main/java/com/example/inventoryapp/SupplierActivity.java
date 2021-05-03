@@ -40,7 +40,6 @@ import java.net.URI;
 public class SupplierActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
     private String userId;
     private String password;
-    private boolean isSupplier;
     private int intQuantity;
     private EditText productNameView;
     private EditText priceView;
@@ -74,7 +73,7 @@ public class SupplierActivity extends AppCompatActivity implements LoaderManager
         currentProductUri = intent.getData();
         userId = intent.getExtras().getString("USERID");
         password = intent.getExtras().getString("PASSWORD");
-        isSupplier = intent.getExtras().getBoolean("IS_SUPPLIER", false);
+        boolean isSupplier = intent.getExtras().getBoolean("IS_SUPPLIER", false);
         // If the intent DOES NOT contain a product content URI, then we know that we are
         // creating a new product.
         if (currentProductUri == null) {
@@ -121,6 +120,7 @@ public class SupplierActivity extends AppCompatActivity implements LoaderManager
         productImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 if (intent.resolveActivity(getPackageManager()) != null)
                     startActivityForResult(intent, REQUEST_CAMERA);
