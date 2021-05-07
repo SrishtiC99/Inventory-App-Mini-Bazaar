@@ -18,19 +18,25 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.inventoryapp.Data.ProductContract;
 import com.example.inventoryapp.Data.ProductDbHelper;
 
+import org.w3c.dom.Text;
+
 public class LoginActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
-    public static final String TAG = "LoginActivity";
-    public boolean isSupplier = false;
-    public String userId;
-    public String password;
+    private static final String TAG = "LoginActivity";
+    private boolean isSupplier = false;
+    private String emailId;
+    private String password;
+    private String userFullName;
     private ProgressBar loadingIndicator;
     private ProductDbHelper dbHelper;
     private static final int LOADER_ID = 0;
@@ -40,26 +46,54 @@ public class LoginActivity extends AppCompatActivity implements LoaderManager.Lo
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        EditText usernameText = (EditText) findViewById(R.id.username);
+
+        LinearLayout SignInLayout = (LinearLayout) findViewById(R.id.account_exist);
+        LinearLayout RegisterLayout = (LinearLayout) findViewById(R.id.new_account);
+
+        Button signInButton = (Button) findViewById(R.id.signIn_button);
+        Button signUpButton = (Button) findViewById(R.id.signUp_button);
+        EditText emailIdText = (EditText) findViewById(R.id.email);
+        EditText emailIdTextNew = (EditText) findViewById(R.id.email_new);
         EditText passwordText = (EditText) findViewById(R.id.password);
-        CheckBox checkBox = (CheckBox) findViewById(R.id.supplier_login);
+        EditText passwordTextNew = (EditText) findViewById(R.id.password_new);
+        EditText FullNameText = (EditText) findViewById(R.id.full_name);
+        Switch isSupplierSwitch = (Switch) findViewById(R.id.is_Supplier);
+        Switch isSupplierSwitchNew = (Switch) findViewById(R.id.is_Supplier_new);
+
+
+        TextView SignInText = (TextView) findViewById(R.id.signIn_text);
+        TextView SignUpText = (TextView) findViewById(R.id.signUp_text);
+
+        SignInText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                RegisterLayout.setVisibility(View.INVISIBLE);
+                SignInLayout.setVisibility(View.VISIBLE);
+            }
+        });
+        SignUpText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SignInLayout.setVisibility(View.INVISIBLE);
+                RegisterLayout.setVisibility(View.VISIBLE);
+            }
+        });
         loadingIndicator = (ProgressBar) findViewById(R.id.loading);
-        Button signInButton = (Button) findViewById(R.id.login);
-        Button signUpButton = (Button) findViewById(R.id.make_account);
         // To access our database, we instantiate our subclass of SQLiteOpenHelper
         // and pass the context, which is the current activity.
         dbHelper = new ProductDbHelper(LoginActivity.this);
+
         signUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
                 loadingIndicator.setVisibility(View.VISIBLE);
-                userId = usernameText.getText().toString();
-                password = passwordText.getText().toString();
-                isSupplier = checkBox.isChecked();
+                emailId = emailIdTextNew.getText().toString();
+                password = passwordTextNew.getText().toString();
+                isSupplier = isSupplierSwitchNew.isChecked();
                 if (Register()) {
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                    intent.putExtra("USERID", userId);
+                    intent.putExtra("USERID", emailId);
                     intent.putExtra("PASSWORD", password);
                     intent.putExtra("IS_SUPPLIER", isSupplier);
                     startActivity(intent);
@@ -74,13 +108,18 @@ public class LoginActivity extends AppCompatActivity implements LoaderManager.Lo
             @Override
             public void onClick(View view) {
                 loadingIndicator.setVisibility(View.VISIBLE);
-                userId = usernameText.getText().toString();
+                emailId = emailIdText.getText().toString();
                 password = passwordText.getText().toString();
-                isSupplier = checkBox.isChecked();
+                isSupplier = isSupplierSwitch.isChecked();
                 getSupportLoaderManager().initLoader(LOADER_ID, null, LoginActivity.this);
             }
         });
 
+        if(isSupplier){
+            Log.e(TAG, "TRUE");
+        }else{
+            Log.e(TAG, "FALSE");
+        }
     }
 
     @NonNull
@@ -92,7 +131,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderManager.Lo
                 ProductContract.ProductEntry.COLUMN_PASSWORD
         };
         String selection = ProductContract.ProductEntry.COLUMN_USER_ID + "=?" ;
-        String[] selectionArgs = new String[]{userId};
+        String[] selectionArgs = new String[]{emailId};
         // The loader will execute the content provider's query method on a background thread
         return new CursorLoader(
                 this,                               // Parent activity context
@@ -108,7 +147,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderManager.Lo
         loadingIndicator.setVisibility(View.INVISIBLE);
         if (data.moveToFirst()) {
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-            intent.putExtra("USERID", userId);
+            intent.putExtra("USERID", emailId);
             intent.putExtra("PASSWORD", password);
             intent.putExtra("IS_SUPPLIER", isSupplier);
             startActivity(intent);
@@ -123,7 +162,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderManager.Lo
     }
 
     private boolean Register() {
-        if (TextUtils.isEmpty(userId) || TextUtils.isEmpty(password)) {
+        if (TextUtils.isEmpty(emailId) || TextUtils.isEmpty(password)) {
             Toast.makeText(this, "Try Again!", Toast.LENGTH_SHORT).show();
             Log.e(TAG, "Input is null");
             return false;
@@ -132,7 +171,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderManager.Lo
         if (isSupplier)
             supplier = 1;
         ContentValues values = new ContentValues();
-        values.put(ProductContract.ProductEntry.COLUMN_USER_ID, userId);
+        values.put(ProductContract.ProductEntry.COLUMN_USER_ID, emailId);
         values.put(ProductContract.ProductEntry.COLUMN_PASSWORD, password);
         values.put(ProductContract.ProductEntry.COLUMN_IS_SUPPLIER, supplier);
         Uri newRowUri = getContentResolver().insert(ProductContract.ProductEntry.CONTENT_URI_LOGIN, values);

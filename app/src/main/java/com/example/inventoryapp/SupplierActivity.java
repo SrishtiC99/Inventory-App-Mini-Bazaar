@@ -52,6 +52,7 @@ public class SupplierActivity extends AppCompatActivity implements LoaderManager
     private boolean mProductHasChanged = false;
     private static final int EXISTING_PRODUCT_LOADER = 0;
     static final int REQUEST_CAMERA = 1;
+    private boolean isSupplier = false;
 
     // OnTouchListener that listens for any user touches on a View, implying that they are modifying
     // the view, and we change the mPetHasChanged boolean to true.
@@ -71,9 +72,12 @@ public class SupplierActivity extends AppCompatActivity implements LoaderManager
         // Examine the intent that was used to launch this activity,
         // in order to figure out if we're creating a new product or editing an existing one.
         Intent intent = getIntent();
-        currentProductUri = intent.getData();
-        userId = intent.getExtras().getString("USERID");
-        password = intent.getExtras().getString("PASSWORD");
+        if(intent.hasExtra("USERID"))
+            userId = intent.getExtras().getString("USERID");
+        if(intent.hasExtra("PASSWORD"))
+            password = intent.getExtras().getString("PASSWORD");
+        if(intent.hasExtra("IS_SUPPLIER"))
+            isSupplier = intent.getExtras().getBoolean("IS_SUPPLIER",false);
         boolean isSupplier = intent.getExtras().getBoolean("IS_SUPPLIER", false);
         // If the intent DOES NOT contain a product content URI, then we know that we are
         // creating a new product.

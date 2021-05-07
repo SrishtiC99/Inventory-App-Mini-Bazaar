@@ -51,9 +51,12 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         setContentView(R.layout.activity_main);
 
         Intent intent = getIntent();
-        userId = intent.getExtras().getString("USERID");
-        password = intent.getExtras().getString("PASSWORD");
-        isSupplier = intent.getExtras().getBoolean("IS_SUPPLIER",false);
+        if(intent.hasExtra("USERID"))
+            userId = intent.getExtras().getString("USERID");
+        if(intent.hasExtra("PASSWORD"))
+            password = intent.getExtras().getString("PASSWORD");
+        if(intent.hasExtra("IS_SUPPLIER"))
+            isSupplier = intent.getExtras().getBoolean("IS_SUPPLIER",false);
         FloatingActionButton fab = findViewById(R.id.fab);
         if(isSupplier){
             fab.setVisibility(View.VISIBLE);
