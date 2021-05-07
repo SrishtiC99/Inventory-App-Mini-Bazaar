@@ -72,13 +72,13 @@ public class SupplierActivity extends AppCompatActivity implements LoaderManager
         // Examine the intent that was used to launch this activity,
         // in order to figure out if we're creating a new product or editing an existing one.
         Intent intent = getIntent();
+        currentProductUri = intent.getData();
         if(intent.hasExtra("USERID"))
             userId = intent.getExtras().getString("USERID");
         if(intent.hasExtra("PASSWORD"))
             password = intent.getExtras().getString("PASSWORD");
         if(intent.hasExtra("IS_SUPPLIER"))
             isSupplier = intent.getExtras().getBoolean("IS_SUPPLIER",false);
-        boolean isSupplier = intent.getExtras().getBoolean("IS_SUPPLIER", false);
         // If the intent DOES NOT contain a product content URI, then we know that we are
         // creating a new product.
         if (currentProductUri == null) {

@@ -60,18 +60,18 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         FloatingActionButton fab = findViewById(R.id.fab);
         if(isSupplier){
             fab.setVisibility(View.VISIBLE);
-            fab.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    // Add a new product
-                    Intent intent = new Intent(MainActivity.this, SupplierActivity.class);
-                    intent.putExtra("USERID", userId);
-                    intent.putExtra("PASSWORD", password);
-                    intent.putExtra("IS_SUPPLIER", isSupplier);
-                    startActivity(intent);
-                }
-            });
         }
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Add a new product
+                Intent intent = new Intent(MainActivity.this, SupplierActivity.class);
+                intent.putExtra("USERID", userId);
+                intent.putExtra("PASSWORD", password);
+                intent.putExtra("IS_SUPPLIER", isSupplier);
+                startActivity(intent);
+            }
+        });
         // To access our database, we instantiate our subclass of SQLiteOpenHelper
         // and pass the context, which is the current activity.
         ProductDbHelper dbHelper = new ProductDbHelper(this);
